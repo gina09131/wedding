@@ -859,6 +859,11 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   .field-row{ grid-template-columns: 1fr 1fr; }
 }
 
+/* 三欄並排（賓客人數 / 兒童椅 / 素食套餐） */
+@media (min-width: 760px){
+  .field-row.cols-3{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 .field-label{
   display: flex;
   align-items: baseline;
@@ -972,6 +977,79 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   box-shadow: 0 0 0 3px rgba(180,64,47,.1);
 }
 
+/* ---- 必填未完成警示 ---- */
+.form-alert{
+  display: grid;
+  gap: .45rem;
+  padding: clamp(.95rem, 3.6vw, 1.25rem) clamp(1rem, 4vw, 1.35rem);
+  border-radius: var(--r-sm);
+  border: 1px solid rgba(180,64,47,.32);
+  background: linear-gradient(180deg, rgba(255,246,243,.95), rgba(253,238,233,.9));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+  text-align: left;
+}
+
+.form-alert[hidden]{ display: none; }
+
+.form-alert.is-shake{ animation: alertShake .5s cubic-bezier(.36,.07,.19,.97) both; }
+
+@keyframes alertShake{
+  10%,90%{ transform: translateX(-1px); }
+  20%,80%{ transform: translateX(2px); }
+  30%,50%,70%{ transform: translateX(-4px); }
+  40%,60%{ transform: translateX(4px); }
+}
+
+.form-alert__title{
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .5em;
+  margin: 0;
+  font-family: var(--font-zh);
+  font-size: clamp(.9rem, 3.5vw, 1rem);
+  font-weight: 500;
+  letter-spacing: .1em;
+  color: #b4402f;
+}
+
+.form-alert__title .en{
+  font-family: var(--font-en);
+  font-size: .85em;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  opacity: .8;
+}
+
+.form-alert__text{
+  margin: 0;
+  font-size: clamp(.76rem, 3vw, .86rem);
+  line-height: 1.9;
+  letter-spacing: .05em;
+  color: var(--ink-2);
+}
+
+.form-alert__list{
+  margin: .15rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem .5rem;
+}
+
+.form-alert__list li{
+  font-size: clamp(.74rem, 2.95vw, .84rem);
+  letter-spacing: .08em;
+  color: #9c3729;
+  background: rgba(180,64,47,.09);
+  border: 1px solid rgba(180,64,47,.18);
+  border-radius: 999px;
+  padding: .3rem .8rem;
+  white-space: nowrap;
+}
+
 .form-actions{
   display: flex;
   justify-content: center;
@@ -1017,6 +1095,16 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   opacity: .6;
   cursor: default;
   box-shadow: none;
+}
+
+/* 必填未完成時，送出鈕輕推一下作為回饋 */
+.rsvp-submit.is-nudge{ animation: btnNudge .45s ease; }
+
+@keyframes btnNudge{
+  0%,100%{ transform: translateX(0); }
+  25%{ transform: translateX(-4px); }
+  50%{ transform: translateX(4px); }
+  75%{ transform: translateX(-2px); }
 }
 
 .form-msg{
@@ -1190,6 +1278,7 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   .acc-panel{ transition: none; }
   .acc-icon::before,.acc-icon::after{ transition: none; }
   .rsvp-card,.btn-solid,.rsvp-cta svg{ transition: none; }
+  .form-alert.is-shake,.rsvp-submit.is-nudge{ animation: none; }
 }
 </style>
 </head>
@@ -1414,6 +1503,15 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
             target="hidden_iframe"
             novalidate>
 
+        <!-- 必填未完成時的警示（由 JS 顯示；預設隱藏） -->
+        <div class="form-alert" id="rsvp-alert" role="alert" aria-live="assertive" hidden>
+          <p class="form-alert__title">
+            表單無法傳送 <span class="en">Cannot Send</span>
+          </p>
+          <p class="form-alert__text">請先完成下列標示 <span class="req">*</span> 的必填欄位：</p>
+          <ul class="form-alert__list" id="rsvp-alert-list"></ul>
+        </div>
+
         <div class="field-row">
           <div class="field">
             <label class="field-label" for="f-name">姓名 <span class="en">Name</span> <span class="req">*</span></label>
@@ -1474,73 +1572,55 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
           </div>
         </div>
 
-        <fieldset class="field fieldset">
-          <legend class="field-label">包含您共幾位賓客參與 <span class="en">Guests</span></legend>
-          <p class="field-hint">如果不克參加，請大人與小孩都選 0。</p>
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label sub" for="f-adults">大人 <span class="en">Adults</span> <span class="req">*</span></label>
-              <div class="select-wrap">
-                <select class="field-select" id="f-adults" name="entry.2066146338">
-                  <option value="">請選擇</option>
-                  <option value="0">0 位</option>
-                  <option value="1">1 位</option>
-                  <option value="2">2 位</option>
-                  <option value="3">3 位</option>
-                  <option value="4">4 位</option>
-                </select>
-              </div>
-              <p class="field-error" aria-live="polite"></p>
+        <div class="field-row cols-3">
+          <div class="field">
+            <label class="field-label" for="f-adults">包含您共幾位賓客參與 <span class="en">Guests</span> <span class="req">*</span></label>
+            <div class="select-wrap">
+              <select class="field-select" id="f-adults" name="entry.2066146338">
+                <option value="">請選擇</option>
+                <option value="0">0 位</option>
+                <option value="1">1 位</option>
+                <option value="2">2 位</option>
+                <option value="3">3 位</option>
+                <option value="4">4 位</option>
+              </select>
             </div>
-
-            <div class="field">
-              <label class="field-label sub" for="f-kids">小孩 <span class="en">Children</span> <span class="req">*</span></label>
-              <div class="select-wrap">
-                <select class="field-select" id="f-kids" name="entry.383678908">
-                  <option value="">請選擇</option>
-                  <option value="0">0 位</option>
-                  <option value="1">1 位</option>
-                  <option value="2">2 位</option>
-                  <option value="3">3 位</option>
-                  <option value="4">4 位</option>
-                </select>
-              </div>
-              <p class="field-error" aria-live="polite"></p>
-            </div>
+            <p class="field-hint">如果不克參加請選 0。</p>
+            <p class="field-error" aria-live="polite"></p>
           </div>
-        </fieldset>
 
-        <fieldset class="field fieldset">
-          <legend class="field-label">特殊需求 <span class="en">Special Requests</span></legend>
-          <p class="field-hint">需要的數量請選擇，不需要的選「不需要」即可。</p>
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label sub" for="f-seats">兒童椅 <span class="en">Child Seats</span></label>
-              <div class="select-wrap">
-                <select class="field-select" id="f-seats" name="entry.1328859960">
-                  <option value="0">不需要</option>
-                  <option value="1">1 張</option>
-                  <option value="2">2 張</option>
-                  <option value="3">3 張</option>
-                  <option value="4">4 張</option>
-                </select>
-              </div>
+          <div class="field">
+            <label class="field-label" for="f-seats">需要幾張兒童椅 <span class="en">Child Seats</span> <span class="req">*</span></label>
+            <div class="select-wrap">
+              <select class="field-select" id="f-seats" name="entry.2062891403">
+                <option value="">請選擇</option>
+                <option value="0">0 張</option>
+                <option value="1">1 張</option>
+                <option value="2">2 張</option>
+                <option value="3">3 張</option>
+                <option value="4">4 張</option>
+              </select>
             </div>
-
-            <div class="field">
-              <label class="field-label sub" for="f-veg">素食 <span class="en">Vegetarian Meals</span></label>
-              <div class="select-wrap">
-                <select class="field-select" id="f-veg" name="entry.455841275">
-                  <option value="0">不需要</option>
-                  <option value="1">1 份</option>
-                  <option value="2">2 份</option>
-                  <option value="3">3 份</option>
-                  <option value="4">4 份</option>
-                </select>
-              </div>
-            </div>
+            <p class="field-hint">不需要請選 0。</p>
+            <p class="field-error" aria-live="polite"></p>
           </div>
-        </fieldset>
+
+          <div class="field">
+            <label class="field-label" for="f-veg">需要幾份素食套餐 <span class="en">Vegetarian Meals</span> <span class="req">*</span></label>
+            <div class="select-wrap">
+              <select class="field-select" id="f-veg" name="entry.1825724568">
+                <option value="">請選擇</option>
+                <option value="0">0 份</option>
+                <option value="1">1 份</option>
+                <option value="2">2 份</option>
+                <option value="3">3 份</option>
+                <option value="4">4 份</option>
+              </select>
+            </div>
+            <p class="field-hint">不需要請選 0。</p>
+            <p class="field-error" aria-live="polite"></p>
+          </div>
+        </div>
 
         <div class="field">
           <label class="field-label" for="f-msg">想對我們說的話 <span class="en">Message</span></label>
@@ -1753,6 +1833,8 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   var frame = document.getElementById("hidden_iframe");
   var btn   = document.getElementById("rsvp-submit");
   var msg   = document.getElementById("rsvp-msg");
+  var alertBox  = document.getElementById("rsvp-alert");
+  var alertList = document.getElementById("rsvp-alert-list");
 
   var nameEl  = document.getElementById("f-name");
   var phoneEl = document.getElementById("f-phone");
@@ -1760,7 +1842,8 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   var relEl   = document.getElementById("f-rel");
   var attEl   = document.getElementById("f-att");
   var adEl    = document.getElementById("f-adults");
-  var kidEl   = document.getElementById("f-kids");
+  var seatEl  = document.getElementById("f-seats");
+  var vegEl   = document.getElementById("f-veg");
 
   var submitted = false;
   var btnLabel  = btn ? btn.innerHTML : "";
@@ -1772,37 +1855,93 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
     if (box) { box.textContent = text || ""; }
   }
 
-  /* 必填欄位與 Google 表單一致：姓名、手機、關係、出席意願、大人、小孩。
-     少任何一項，Google 會整筆退掉（HTTP 400），所以前端先擋住。 */
+  /* 必填欄位與 Google 表單一致：姓名、手機、關係、出席意願、賓客人數、兒童椅、素食。
+     少任何一項，Google 會整筆退掉（HTTP 400），所以前端先擋住並顯示警示。 */
+  var missing = [];
+
+  function showAlert() {
+    if (!alertBox || !alertList) { return; }
+    if (!missing.length) { hideAlert(); return; }
+
+    alertList.innerHTML = "";
+    missing.forEach(function (label) {
+      var li = document.createElement("li");
+      li.textContent = label;
+      alertList.appendChild(li);
+    });
+
+    alertBox.hidden = false;
+    if (!reduceMotion()) {
+      alertBox.classList.remove("is-shake");
+      void alertBox.offsetWidth;           /* 重新觸發動畫 */
+      alertBox.classList.add("is-shake");
+    }
+    try { alertBox.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {
+      alertBox.scrollIntoView();
+    }
+  }
+
+  function hideAlert() {
+    if (!alertBox) { return; }
+    alertBox.hidden = true;
+    alertBox.classList.remove("is-shake");
+    if (alertList) { alertList.innerHTML = ""; }
+  }
+
+  function reduceMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
   function validate() {
+    missing = [];
     var firstBad = null;
 
-    function need(el, ok, text) {
+    function need(el, ok, label, text) {
       if (ok) { setError(el, ""); return; }
       setError(el, text);
+      missing.push(label);
       firstBad = firstBad || el;
     }
 
-    need(nameEl,  !!(nameEl.value || "").trim(), "請填寫您的姓名");
-    need(phoneEl, !!(phoneEl.value || "").trim(), "請填寫您的手機號碼");
+    need(nameEl,  !!(nameEl.value || "").trim(), "姓名 NAME", "請填寫您的姓名");
+    need(phoneEl, !!(phoneEl.value || "").trim(), "手機號碼 PHONE", "請填寫您的手機號碼");
 
     var mail = (mailEl.value || "").trim();
-    need(mailEl, !mail || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail), "電子郵件格式有誤，請再確認");
+    if (mail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
+      setError(mailEl, "電子郵件格式有誤，請再確認");
+      missing.push("E-mail 格式");
+      firstBad = firstBad || mailEl;
+    } else {
+      setError(mailEl, "");
+    }
 
-    need(relEl, !!relEl.value, "請選擇您與新人的關係");
-    need(attEl, !!attEl.value, "請選擇是否能前來參加");
-    need(adEl,  !!adEl.value,  "請選擇大人人數（不克參加請選 0）");
-    need(kidEl, !!kidEl.value, "請選擇小孩人數（不克參加請選 0）");
+    need(relEl,  !!relEl.value,  "與新人的關係 RELATIONSHIP", "請選擇您與新人的關係");
+    need(attEl,  !!attEl.value,  "出席意願 ATTENDANCE", "請選擇是否能前來參加");
+    need(adEl,   !!adEl.value,   "賓客人數 GUESTS", "請選擇參與人數（不克參加請選 0）");
+    need(seatEl, !!seatEl.value, "兒童椅 CHILD SEATS", "請選擇兒童椅數量（不需要請選 0）");
+    need(vegEl,  !!vegEl.value,  "素食套餐 VEGETARIAN MEALS", "請選擇素食套餐份數（不需要請選 0）");
 
-    if (firstBad) {
-      try { firstBad.focus({ preventScroll: false }); } catch (e) { firstBad.focus(); }
+    if (missing.length) {
+      showAlert();
+      if (msg) { msg.textContent = ""; }
+      if (firstBad) {
+        try { firstBad.focus({ preventScroll: true }); } catch (e) {
+          try { firstBad.focus(); } catch (e2) {}
+        }
+      }
       return false;
     }
+
+    hideAlert();
     return true;
   }
 
-  [nameEl, phoneEl, mailEl, relEl, attEl, adEl, kidEl].forEach(function (el) {
-    var clear = function () { setError(el, ""); };
+  /* 使用者開始修正時：清掉該欄錯誤；若警示已顯示，即時重新檢查並自動收起 */
+  [nameEl, phoneEl, mailEl, relEl, attEl, adEl, seatEl, vegEl].forEach(function (el) {
+    var clear = function () {
+      setError(el, "");
+      if (alertBox && !alertBox.hidden) { validate(); }
+    };
     el.addEventListener("input", clear);
     el.addEventListener("change", clear);
   });
@@ -1836,7 +1975,12 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
     event.preventDefault();
 
     if (!validate()) {
-      if (msg) { msg.textContent = "請確認標示的欄位後再送出。"; }
+      /* 必填未完成：validate() 已顯示警示並聚焦第一個漏填欄位，這裡不再送出 */
+      if (btn) {
+        btn.classList.remove("is-nudge");
+        void btn.offsetWidth;
+        btn.classList.add("is-nudge");
+      }
       return;
     }
 
@@ -1902,9 +2046,9 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   5) 出席回函（隱藏式 iframe 提交）
      form 的 action 為 Google 表單的 formResponse，只使用 entry ID 當欄位名稱，
      不帶任何預填參數，畫面上所有欄位預設為空。
-     這份表單共 11 個 entry，其中 6 題為必填（姓名、手機號碼、關係、出席意願、
-     大人人數、小孩人數）。少任何一個必填題，Google 會整筆退掉（HTTP 400），
-     所以前端驗證必須與表單的必填設定一致。
+     這份表單共 10 個 entry，其中 7 題為必填（姓名、手機號碼、關係、出席意願、
+     賓客人數、兒童椅、素食套餐）。少任何一個必填題、或 entry ID 對不上，
+     Google 會整筆退掉（HTTP 400），賓客的填答就會無聲消失。
 
      entry.828406939  姓名                    （必填，文字）
      entry.836431679  手機號碼                （必填，文字）
@@ -1912,38 +2056,34 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
      entry.1398458212  是否能來參加我們的婚禮？ （必填，單選）
      entry.1083017658  紙本喜帖地址            （選填，文字）
      entry.334368021  電子喜帖 E-mail         （選填，文字）
-     entry.2066146338  賓客人數－大人          （必填，表格題）
-     entry.383678908  賓客人數－小孩          （必填，表格題）
-     entry.1328859960  特殊需求－兒童椅        （選填，表格題）
-     entry.455841275  特殊需求－素食          （選填，表格題）
+     entry.2066146338  包含您共幾位賓客參與    （必填，下拉 0–4）
+     entry.2062891403  需要幾張兒童椅          （必填，下拉 0–4）
+     entry.1825724568  需要幾份素食套餐        （必填，下拉 0–4）
      entry.232295728  想對我們說的話          （選填，多行文字）
 
-     ※ 表格題（大人／小孩／兒童椅／素食）送出的值是「欄位索引」，
-       選項為 0–4，因此 value 直接填 0、1、2、3、4（不是「0_2」這種寫法）。
+     ⚠ 重要：entry ID 會隨表單編輯而改變，每次改完表單請重新核對。
+       本頁 ID 已依最新表單校正：
+         小孩人數（表格列）→ 表單已移除該欄，頁面同步刪除
+         素食套餐         → entry.2062891403 改為 entry.1825724568
+         兒童椅／素食套餐  → 由選填改為必填，已同步加入前端必填檢查
+
+     如何重新取得正確 ID（不用登入、任何人可做）：
+       1. 瀏覽器開啟表單的 viewform 網址
+       2. 檢視原始碼，搜尋 FB_PUBLIC_LOAD_DATA_
+       3. 裡面每個欄位都會列出 [entryID, 選項, 是否必填]，照抄即可
+     或使用表單的「預填」功能：填一份範例 → 取得預填連結 →
+       網址中 entry.XXXXX=值 的 XXXXX 就是正確 ID。
+
+     ※ 下拉題送出的值是「選項文字」，本表單選項為 0–4，故 value 直接填 0–4。
      ※ 單選題送出的值是「選項文字」，必須與表單上的文字完全相同，否則該題會被略過。
 
-     若要換成另一份表單，請同步改三處：
-       (a) <form id="rsvp-form" action="..."> 的網址
-           → https://docs.google.com/forms/d/<表單ID>/formResponse
-       (b) 每個欄位的 name="entry.XXXXXXXXX"
-       (c) 前端驗證中列為必填的欄位，需與新表單的必填設定一致
-     隱藏 iframe：<iframe name="hidden_iframe">，送出後不會跳頁。
+     送出後無法由前端得知 Google 是否真的收下（跨網域回應讀不到），
+     所以頁面一律顯示 Thank You。若懷疑沒進後台，請先檢查上面的 entry ID 是否仍有效。
 ============================================================
 -->
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
 
 
 
