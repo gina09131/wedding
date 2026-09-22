@@ -466,17 +466,19 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
    ============================================================ */
 .couple{
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(1rem, 4.2vw, 1.55rem);
-  margin-bottom: clamp(2.6rem, 9vw, 4rem);
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(1.6rem, 8vw, 3.8rem);
+  margin-top: clamp(2.6rem, 9vw, 4rem);
 }
 
 .couple-item{
-  display: grid;
-  grid-template-columns: auto 4.9em;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: clamp(.9rem, 4vw, 1.7rem);
+  gap: clamp(.7rem, 2.6vw, 1rem);
 }
 
 .avatar{
@@ -504,6 +506,10 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
 .couple-item:last-child  .avatar img{ object-position: 50% 36%; }
 
 .couple-label{
+  display: inline-flex;
+  align-items: baseline;
+  gap: .4em;
+  white-space: nowrap;
   font-family: var(--font-en);
   font-weight: 500;
   text-transform: uppercase;
@@ -511,6 +517,16 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   text-indent: .3em;
   font-size: clamp(.72rem, 3vw, .88rem);
   color: var(--clay);
+}
+
+.couple-label .tc{
+  font-family: var(--font-zh);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: .2em;
+  text-indent: 0;
+  font-size: .95em;
+  color: var(--ink-2);
 }
 
 .story{
@@ -544,6 +560,9 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   color: var(--clay);
   letter-spacing: .01em;
 }
+
+/* 署名之後的兩張頭貼：左右並列 */
+.signature + .couple{ margin-top: clamp(2.4rem, 8vw, 3.4rem); }
 
 /* ============================================================
    5) ALBUM
@@ -948,7 +967,9 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   .nav{ padding-inline: .55rem; }
   .nav-links a{ font-size: .68rem; }
   .nav-links{ gap: .34rem; }
-  .couple-item{ grid-template-columns: auto auto; }
+  .couple{ gap: 1.1rem; }
+  .avatar{ width: 92px; height: 92px; }
+  .couple-label{ font-size: .7rem; letter-spacing: .2em; text-indent: .2em; }
 }
 
 /* ============================================================
@@ -1038,6 +1059,18 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   <div class="wrap">
     <p class="kicker reveal">Our Story</p>
 
+    <div class="story">
+      <p class="reveal">我們從相遇、相知，到決定一起走進婚姻，<br />似乎比別人的故事少了很多等待。</p>
+      <p class="reveal">但有些人，不需要花很久的時間認識，<br />就會讓你慢慢明白——<br />原來，適合一起生活，比認識多久更重要。</p>
+      <p class="reveal">從兩個人，到迎來寶寶，<br />再到成為一家人，<br />我們走得比想像中快，<br />卻也在相處的每一天裡，更確定彼此就是那個對的人。</p>
+      <p class="reveal">我們的故事沒有很長的前言，<br />卻已經開始有了很長很長的以後。</p>
+      <p class="reveal">而現在，<br />我們想邀請你們一起見證，<br />我們故事的下一章。</p>
+    </div>
+
+    <p class="signature reveal">
+      <span class="sig-name">Roy</span> 奇翰 &amp; <span class="sig-name">Gina</span>琪嘉
+    </p>
+
     <div class="couple reveal">
       <div class="couple-item">
         <span class="avatar">
@@ -1057,18 +1090,6 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
         <span class="couple-label">Bride</span>
       </div>
     </div>
-
-    <div class="story">
-      <p class="reveal">我們從相遇、相知，到決定一起走進婚姻，<br />似乎比別人的故事少了很多等待。</p>
-      <p class="reveal">但有些人，不需要花很久的時間認識，<br />就會讓你慢慢明白——<br />原來，適合一起生活，比認識多久更重要。</p>
-      <p class="reveal">從兩個人，到迎來寶寶，<br />再到成為一家人，<br />我們走得比想像中快，<br />卻也在相處的每一天裡，更確定彼此就是那個對的人。</p>
-      <p class="reveal">我們的故事沒有很長的前言，<br />卻已經開始有了很長很長的以後。</p>
-      <p class="reveal">而現在，<br />我們想邀請你們一起見證，<br />我們故事的下一章。</p>
-    </div>
-
-    <p class="signature reveal">
-      <span class="sig-name">Roy</span> 奇翰 &amp; <span class="sig-name">Gina</span>琪嘉
-    </p>
   </div>
 </section>
 
@@ -1385,6 +1406,11 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
 
 </body>
 </html>
+
+
+
+
+
 
 
 
