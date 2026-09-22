@@ -838,11 +838,239 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
 }
 
 .rsvp-card:hover,
-.rsvp-card:focus-visible{
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lift);
+.rsvp-card:focus-within{
+  box-shadow: var(--shadow-card);
 }
 
+/* ---- RSVP 表單 ---- */
+.rsvp-form{
+  position: relative;
+  margin-top: clamp(1.8rem, 6.4vw, 2.5rem);
+  display: grid;
+  gap: clamp(1.05rem, 3.8vw, 1.5rem);
+  text-align: left;
+}
+
+.field{ display: grid; gap: .5rem; }
+
+.field-row{ display: grid; gap: clamp(1.05rem, 3.8vw, 1.5rem); }
+
+@media (min-width: 620px){
+  .field-row{ grid-template-columns: 1fr 1fr; }
+}
+
+.field-label{
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .5em;
+  font-family: var(--font-zh);
+  font-size: clamp(.78rem, 3.1vw, .88rem);
+  font-weight: 500;
+  letter-spacing: .12em;
+  color: var(--ink-2);
+}
+
+.field-label .en{
+  font-family: var(--font-en);
+  font-size: .9em;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.field-label .req{ color: var(--clay); font-family: var(--font-en); font-size: .95em; }
+
+.field-label.sub{ font-size: clamp(.74rem, 2.9vw, .84rem); color: var(--ink-3); }
+
+.field-hint{
+  margin: .1rem 0 .2rem;
+  font-size: clamp(.72rem, 2.85vw, .8rem);
+  line-height: 1.85;
+  letter-spacing: .05em;
+  color: var(--ink-3);
+}
+
+.fieldset{
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  display: grid;
+  gap: .5rem;
+}
+
+.fieldset > legend{ padding: 0; margin-bottom: .1rem; }
+
+.field-input,
+.field-select,
+.field-textarea{
+  width: 100%;
+  min-height: 48px;
+  padding: .7rem .95rem;
+  font-family: var(--font-zh);
+  font-size: clamp(.88rem, 3.4vw, .97rem);
+  letter-spacing: .04em;
+  color: var(--ink);
+  background: rgba(255,255,255,.7);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-sm);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color .35s var(--ease), box-shadow .35s var(--ease), background .35s var(--ease);
+}
+
+.field-input::placeholder,
+.field-textarea::placeholder{ color: var(--ink-3); opacity: .8; }
+
+.field-input:hover,
+.field-select:hover,
+.field-textarea:hover{ border-color: var(--line); }
+
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus{
+  outline: none;
+  border-color: var(--sand);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(212,163,115,.18);
+}
+
+.field-textarea{
+  min-height: 124px;
+  line-height: 1.9;
+  resize: vertical;
+}
+
+.select-wrap{ position: relative; }
+
+.select-wrap::after{
+  content: "";
+  position: absolute;
+  right: 1.05rem;
+  top: 50%;
+  width: 7px; height: 7px;
+  border-right: 1px solid var(--clay);
+  border-bottom: 1px solid var(--clay);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.field-error{
+  min-height: 1.05em;
+  margin: 0;
+  font-size: clamp(.72rem, 2.85vw, .8rem);
+  letter-spacing: .08em;
+  color: #b4402f;
+}
+
+.field.has-error .field-input,
+.field.has-error .field-select{
+  border-color: rgba(180,64,47,.5);
+  box-shadow: 0 0 0 3px rgba(180,64,47,.1);
+}
+
+.form-actions{
+  display: flex;
+  justify-content: center;
+  margin-top: .3rem;
+}
+
+.rsvp-submit{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6em;
+  min-height: 50px;
+  padding: .85rem 2.4rem;
+  border-radius: 999px;
+  background: var(--clay);
+  color: #fff8f4;
+  font-family: var(--font-zh);
+  font-size: clamp(.84rem, 3.3vw, .95rem);
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-indent: .2em;
+  cursor: pointer;
+  border: 0;
+  box-shadow: 0 10px 26px rgba(207,112,95,.26);
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease), background .4s var(--ease), opacity .4s var(--ease);
+}
+
+.rsvp-submit .en{
+  font-family: var(--font-en);
+  font-size: .9em;
+  letter-spacing: .22em;
+  text-indent: 0;
+  opacity: .85;
+}
+
+.rsvp-submit:hover:not([disabled]){
+  transform: translateY(-3px);
+  background: #bd6252;
+  box-shadow: 0 16px 34px rgba(207,112,95,.32);
+}
+
+.rsvp-submit[disabled]{
+  opacity: .6;
+  cursor: default;
+  box-shadow: none;
+}
+
+.form-msg{
+  min-height: 1.2em;
+  margin: 0;
+  text-align: center;
+  font-size: clamp(.76rem, 3vw, .86rem);
+  letter-spacing: .1em;
+  color: var(--ink-2);
+}
+
+.rsvp-alt{
+  margin: clamp(1.6rem, 5.6vw, 2.1rem) auto 0;
+  font-size: clamp(.74rem, 2.95vw, .84rem);
+  letter-spacing: .06em;
+  color: var(--ink-3);
+}
+
+.rsvp-alt a{
+  color: var(--clay);
+  border-bottom: 1px solid rgba(207,112,95,.4);
+  padding-bottom: .1rem;
+  transition: border-color .4s var(--ease);
+}
+
+.rsvp-alt a:hover{ border-bottom-color: var(--clay); }
+
+/* 送出成功後的替換畫面 */
+.rsvp-done{ display: none; text-align: center; padding-block: clamp(1rem, 4vw, 1.8rem); }
+
+.rsvp-card.is-done .rsvp-form,
+.rsvp-card.is-done .rsvp-alt,
+.rsvp-card.is-done .rsvp-note{ display: none; }
+
+.rsvp-card.is-done .rsvp-done{ display: block; }
+
+.done-title{
+  font-family: var(--font-script);
+  font-size: clamp(2rem, 8.4vw, 2.9rem);
+  line-height: 1.2;
+  color: var(--clay);
+  margin-bottom: clamp(.9rem, 3.6vw, 1.3rem);
+}
+
+.done-note{
+  font-size: clamp(.88rem, 3.4vw, 1rem);
+  line-height: 2.1;
+  letter-spacing: .06em;
+  color: var(--ink-2);
+  max-width: 24em;
+  margin-inline: auto;
+}
+
+/* ---- RSVP 標題 ---- */
 .rsvp-title{
   font-family: var(--font-zh);
   font-weight: 500;
@@ -867,28 +1095,6 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   max-width: 22em;
   margin-inline: auto;
 }
-
-.rsvp-cta{
-  display: inline-flex;
-  align-items: center;
-  gap: .55rem;
-  margin-top: clamp(1.6rem, 6vw, 2.3rem);
-  padding-bottom: .3rem;
-  font-size: clamp(.82rem, 3.3vw, .95rem);
-  letter-spacing: .16em;
-  color: var(--clay);
-  border-bottom: 1px solid rgba(207,112,95,.45);
-  transition: border-color .45s var(--ease), color .45s var(--ease);
-}
-
-.rsvp-cta svg{
-  width: 1.05em;
-  height: 1.05em;
-  transition: transform .45s var(--ease);
-}
-
-.rsvp-card:hover .rsvp-cta svg,
-.rsvp-card:focus-visible .rsvp-cta svg{ transform: translateX(5px); }
 
 /* ============================================================
    8) FOOTER
@@ -1193,19 +1399,176 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
 <!-- ============================ RSVP ============================ -->
 <section class="section" id="rsvp" aria-label="出席回函">
   <div class="wrap">
-    <a class="rsvp-card reveal" href="https://forms.gle/Lskvkey4bGyYcug56" target="_blank" rel="noopener">
+    <div class="rsvp-card reveal">
       <p class="kicker">R.S.V.P.</p>
       <h2 class="rsvp-title">RSVP <span class="sep">/</span> 出席回函</h2>
-      <p class="rsvp-note">誠摯邀請您與我們共享這一天，請於表單中回覆出席意願。</p>
-      <span class="rsvp-cta">
-        填寫回函
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4 12h15"></path>
-          <path d="M13 6l6 6-6 6"></path>
-        </svg>
-      </span>
-    </a>
+      <p class="rsvp-note">誠摯邀請您與我們共享這一天，請於下方回覆出席意願。</p>
+
+      <!--
+        隱藏式 iframe 提交：表單直接 POST 到 Google 表單的 formResponse，
+        只使用 entry ID 作為欄位名稱，不帶任何預填參數，所有欄位預設為空。
+      -->
+      <form class="rsvp-form" id="rsvp-form"
+            action="https://docs.google.com/forms/d/1C3jr0auTYMFY-dMHH1LE5BXAnlejuYjiLIhSkdKU9kM/formResponse"
+            method="POST"
+            target="hidden_iframe"
+            novalidate>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="f-name">姓名 <span class="en">Name</span> <span class="req">*</span></label>
+            <input class="field-input" id="f-name" name="entry.828406939" type="text"
+                   autocomplete="name" placeholder="請輸入您的姓名" />
+            <p class="field-error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="f-phone">手機號碼 <span class="en">Phone</span> <span class="req">*</span></label>
+            <input class="field-input" id="f-phone" name="entry.836431679" type="tel"
+                   autocomplete="tel" placeholder="請輸入手機號碼" />
+            <p class="field-error" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="f-rel">您與新人的關係 <span class="en">Relationship</span> <span class="req">*</span></label>
+            <div class="select-wrap">
+              <select class="field-select" id="f-rel" name="entry.1074481180">
+                <option value="">請選擇</option>
+                <option value="男方父母親友">男方父母親友</option>
+                <option value="新郎朋友">新郎朋友</option>
+                <option value="女方父母親友">女方父母親友</option>
+                <option value="新娘同事">新娘同事</option>
+                <option value="新娘朋友">新娘朋友</option>
+              </select>
+            </div>
+            <p class="field-error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="f-att">是否能來參加我們的婚禮？ <span class="en">Attendance</span> <span class="req">*</span></label>
+            <div class="select-wrap">
+              <select class="field-select" id="f-att" name="entry.1398458212">
+                <option value="">請選擇</option>
+                <option value="我要參加！">我要參加！</option>
+                <option value="不克參加，祝福就留在下方！">不克參加，祝福就留在下方！</option>
+              </select>
+            </div>
+            <p class="field-error" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="f-addr">紙本喜帖地址 <span class="en">Postal Address</span></label>
+            <input class="field-input" id="f-addr" name="entry.1083017658" type="text"
+                   autocomplete="street-address" placeholder="欲收到紙本喜帖再填寫" />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="f-email">電子喜帖 E-mail <span class="en">E-mail</span></label>
+            <input class="field-input" id="f-email" name="entry.334368021" type="email"
+                   autocomplete="email" placeholder="欲收到電子喜帖再填寫" />
+            <p class="field-error" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <fieldset class="field fieldset">
+          <legend class="field-label">包含您共幾位賓客參與 <span class="en">Guests</span></legend>
+          <p class="field-hint">如果不克參加，請大人與小孩都選 0。</p>
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label sub" for="f-adults">大人 <span class="en">Adults</span> <span class="req">*</span></label>
+              <div class="select-wrap">
+                <select class="field-select" id="f-adults" name="entry.2066146338">
+                  <option value="">請選擇</option>
+                  <option value="0">0 位</option>
+                  <option value="1">1 位</option>
+                  <option value="2">2 位</option>
+                  <option value="3">3 位</option>
+                  <option value="4">4 位</option>
+                </select>
+              </div>
+              <p class="field-error" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label class="field-label sub" for="f-kids">小孩 <span class="en">Children</span> <span class="req">*</span></label>
+              <div class="select-wrap">
+                <select class="field-select" id="f-kids" name="entry.383678908">
+                  <option value="">請選擇</option>
+                  <option value="0">0 位</option>
+                  <option value="1">1 位</option>
+                  <option value="2">2 位</option>
+                  <option value="3">3 位</option>
+                  <option value="4">4 位</option>
+                </select>
+              </div>
+              <p class="field-error" aria-live="polite"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="field fieldset">
+          <legend class="field-label">特殊需求 <span class="en">Special Requests</span></legend>
+          <p class="field-hint">需要的數量請選擇，不需要的選「不需要」即可。</p>
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label sub" for="f-seats">兒童椅 <span class="en">Child Seats</span></label>
+              <div class="select-wrap">
+                <select class="field-select" id="f-seats" name="entry.1328859960">
+                  <option value="0">不需要</option>
+                  <option value="1">1 張</option>
+                  <option value="2">2 張</option>
+                  <option value="3">3 張</option>
+                  <option value="4">4 張</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label sub" for="f-veg">素食 <span class="en">Vegetarian Meals</span></label>
+              <div class="select-wrap">
+                <select class="field-select" id="f-veg" name="entry.455841275">
+                  <option value="0">不需要</option>
+                  <option value="1">1 份</option>
+                  <option value="2">2 份</option>
+                  <option value="3">3 份</option>
+                  <option value="4">4 份</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label class="field-label" for="f-msg">想對我們說的話 <span class="en">Message</span></label>
+          <textarea class="field-textarea" id="f-msg" name="entry.232295728"
+                    rows="4" placeholder="寫下您的祝福或想告訴我們的事"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="rsvp-submit" id="rsvp-submit" type="submit">送出回函 <span class="en">Send</span></button>
+        </div>
+
+        <p class="form-msg" id="rsvp-msg" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="rsvp-done" id="rsvp-done">
+        <p class="done-title">Thank You</p>
+        <p class="done-note">已收到您的回覆，謝謝您的祝福與參與，我們婚禮當天見。</p>
+      </div>
+
+      <p class="rsvp-alt">
+        表單無法送出時，也可以
+        <a href="https://docs.google.com/forms/d/1C3jr0auTYMFY-dMHH1LE5BXAnlejuYjiLIhSkdKU9kM/viewform"
+           target="_blank" rel="noopener">在新視窗開啟回函表單</a>。
+      </p>
+    </div>
+
+    <!-- 隱藏式 iframe：接收表單送出結果，避免頁面跳轉 -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none" title="表單送出"></iframe>
   </div>
 </section>
 
@@ -1376,6 +1739,140 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
     }, 160);
   });
 })();
+
+/* ============================================================
+   RSVP — 隱藏式 iframe 提交
+   表單 POST 到 Google 表單 formResponse，由隱藏 iframe 接收結果，
+   頁面不會跳轉；送出成功後以 Thank You 畫面取代表單。
+   ============================================================ */
+(function () {
+  var form = document.getElementById("rsvp-form");
+  if (!form) { return; }
+
+  var card  = form.closest(".rsvp-card");
+  var frame = document.getElementById("hidden_iframe");
+  var btn   = document.getElementById("rsvp-submit");
+  var msg   = document.getElementById("rsvp-msg");
+
+  var nameEl  = document.getElementById("f-name");
+  var phoneEl = document.getElementById("f-phone");
+  var mailEl  = document.getElementById("f-email");
+  var relEl   = document.getElementById("f-rel");
+  var attEl   = document.getElementById("f-att");
+  var adEl    = document.getElementById("f-adults");
+  var kidEl   = document.getElementById("f-kids");
+
+  var submitted = false;
+  var btnLabel  = btn ? btn.innerHTML : "";
+
+  function setError(el, text) {
+    var field = el.closest(".field");
+    if (field) { field.classList.toggle("has-error", !!text); }
+    var box = field ? field.querySelector(".field-error") : null;
+    if (box) { box.textContent = text || ""; }
+  }
+
+  /* 必填欄位與 Google 表單一致：姓名、手機、關係、出席意願、大人、小孩。
+     少任何一項，Google 會整筆退掉（HTTP 400），所以前端先擋住。 */
+  function validate() {
+    var firstBad = null;
+
+    function need(el, ok, text) {
+      if (ok) { setError(el, ""); return; }
+      setError(el, text);
+      firstBad = firstBad || el;
+    }
+
+    need(nameEl,  !!(nameEl.value || "").trim(), "請填寫您的姓名");
+    need(phoneEl, !!(phoneEl.value || "").trim(), "請填寫您的手機號碼");
+
+    var mail = (mailEl.value || "").trim();
+    need(mailEl, !mail || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail), "電子郵件格式有誤，請再確認");
+
+    need(relEl, !!relEl.value, "請選擇您與新人的關係");
+    need(attEl, !!attEl.value, "請選擇是否能前來參加");
+    need(adEl,  !!adEl.value,  "請選擇大人人數（不克參加請選 0）");
+    need(kidEl, !!kidEl.value, "請選擇小孩人數（不克參加請選 0）");
+
+    if (firstBad) {
+      try { firstBad.focus({ preventScroll: false }); } catch (e) { firstBad.focus(); }
+      return false;
+    }
+    return true;
+  }
+
+  [nameEl, phoneEl, mailEl, relEl, attEl, adEl, kidEl].forEach(function (el) {
+    var clear = function () { setError(el, ""); };
+    el.addEventListener("input", clear);
+    el.addEventListener("change", clear);
+  });
+
+  /* 送出：
+     主要走 fetch(mode:"no-cors") 直接 POST 到 formResponse。
+     這一點很重要 —— 內嵌預覽視窗（sandboxed iframe）通常不含 allow-forms，
+     原生表單送出會被瀏覽器靜默擋掉，所以 fetch 才是能在預覽裡也送出的路徑。
+     若 fetch 因環境限制失敗，才退回「隱藏 iframe」的原生送出。 */
+  var usingIframe = false;
+
+  function markDone() {
+    if (card) { card.classList.add("is-done"); }
+    if (msg) { msg.textContent = ""; }
+    if (btn) { btn.disabled = false; btn.innerHTML = btnLabel; }
+  }
+
+  function fallbackToIframe() {
+    usingIframe = true;
+    try {
+      form.submit();   // 原生送出，由 target="hidden_iframe" 接收
+    } catch (e) {
+      if (btn) { btn.disabled = false; btn.innerHTML = btnLabel; }
+      if (msg) {
+        msg.textContent = "這個環境無法直接送出，請點下方連結改用新視窗填寫。";
+      }
+    }
+  }
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (!validate()) {
+      if (msg) { msg.textContent = "請確認標示的欄位後再送出。"; }
+      return;
+    }
+
+    submitted = true;
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "送出中…";
+    }
+    if (msg) { msg.textContent = "正在送出您的回覆…"; }
+
+    var body = new URLSearchParams(new FormData(form)).toString();
+    var url  = form.getAttribute("action");
+
+    if (!window.fetch) { fallbackToIframe(); return; }
+
+    fetch(url, {
+      method: "POST",
+      mode: "no-cors",                       // 簡單請求，不需 CORS 預檢
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: body
+    }).then(function () {
+      /* no-cors 的回應是不透明的，讀不到內容；沒有丟出錯誤即視為已送出 */
+      markDone();
+    }).catch(function () {
+      fallbackToIframe();
+    });
+  });
+
+  /* 隱藏 iframe 回報載入完成 → 視為送出成功（僅在退回原生送出時使用） */
+  if (frame) {
+    frame.addEventListener("load", function () {
+      if (!submitted || !usingIframe) { return; }
+      markDone();
+    });
+  }
+})();
 </script>
 
 <!--
@@ -1401,11 +1898,51 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
      搜尋 new Date(2026, 11, 12, 11, 30, 0)
      格式為 new Date(年, 月-1, 日, 時, 分, 秒)
      例：2027 年 1 月 5 日 12:00 → new Date(2027, 0, 5, 12, 0, 0)
+
+  5) 出席回函（隱藏式 iframe 提交）
+     form 的 action 為 Google 表單的 formResponse，只使用 entry ID 當欄位名稱，
+     不帶任何預填參數，畫面上所有欄位預設為空。
+     這份表單共 11 個 entry，其中 6 題為必填（姓名、手機號碼、關係、出席意願、
+     大人人數、小孩人數）。少任何一個必填題，Google 會整筆退掉（HTTP 400），
+     所以前端驗證必須與表單的必填設定一致。
+
+     entry.828406939  姓名                    （必填，文字）
+     entry.836431679  手機號碼                （必填，文字）
+     entry.1074481180  您與新人的關係          （必填，單選）
+     entry.1398458212  是否能來參加我們的婚禮？ （必填，單選）
+     entry.1083017658  紙本喜帖地址            （選填，文字）
+     entry.334368021  電子喜帖 E-mail         （選填，文字）
+     entry.2066146338  賓客人數－大人          （必填，表格題）
+     entry.383678908  賓客人數－小孩          （必填，表格題）
+     entry.1328859960  特殊需求－兒童椅        （選填，表格題）
+     entry.455841275  特殊需求－素食          （選填，表格題）
+     entry.232295728  想對我們說的話          （選填，多行文字）
+
+     ※ 表格題（大人／小孩／兒童椅／素食）送出的值是「欄位索引」，
+       選項為 0–4，因此 value 直接填 0、1、2、3、4（不是「0_2」這種寫法）。
+     ※ 單選題送出的值是「選項文字」，必須與表單上的文字完全相同，否則該題會被略過。
+
+     若要換成另一份表單，請同步改三處：
+       (a) <form id="rsvp-form" action="..."> 的網址
+           → https://docs.google.com/forms/d/<表單ID>/formResponse
+       (b) 每個欄位的 name="entry.XXXXXXXXX"
+       (c) 前端驗證中列為必填的欄位，需與新表單的必填設定一致
+     隱藏 iframe：<iframe name="hidden_iframe">，送出後不會跳頁。
 ============================================================
 -->
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
 
 
 
