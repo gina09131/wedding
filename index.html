@@ -565,40 +565,118 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
 .signature + .couple{ margin-top: clamp(2.4rem, 8vw, 3.4rem); }
 
 /* ============================================================
-   5) ALBUM
+   5) ALBUM — 水平捲動相簿（6 張）
    ============================================================ */
-.album-frame{
-  width: 100%;
-  max-width: 960px;
-  margin-inline: auto;
-  border-radius: var(--r-md);
-  border: 1px solid var(--line-2);
-  background: var(--ivory);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-  aspect-ratio: 4 / 3;
+.gallery{
+  position: relative;
+  margin-top: clamp(1.2rem, 4.4vw, 1.8rem);
 }
 
-.album-frame iframe{
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-  background: #fff;
+/* 左右象牙白漸層淡出：暗示還有更多照片 */
+.gallery::before,
+.gallery::after{
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: clamp(14px, 5vw, 58px);
+  pointer-events: none;
+  z-index: 2;
+}
+.gallery::before{
+  left: 0;
+  background: linear-gradient(90deg, var(--ivory) 14%, rgba(251,247,242,0));
+}
+.gallery::after{
+  right: 0;
+  background: linear-gradient(270deg, var(--ivory) 14%, rgba(251,247,242,0));
 }
 
-.album-note{
-  margin-top: clamp(1.1rem, 4vw, 1.6rem);
-  text-align: center;
-  font-size: clamp(.76rem, 3.1vw, .86rem);
-  letter-spacing: .08em;
-  color: var(--ink-3);
-}
-
-.album-btn-row{
-  margin-top: clamp(.9rem, 3.4vw, 1.3rem);
+.gallery-track{
   display: flex;
-  justify-content: center;
+  gap: clamp(.7rem, 2.4vw, 1.15rem);
+  align-items: stretch;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: clamp(1rem, 4vw, 1.7rem) clamp(1.1rem, 4vw, 3rem);
+  scroll-padding-inline: clamp(1.1rem, 4vw, 3rem);
+  scroll-behavior: smooth;
+  cursor: grab;
+  outline: none;
+  scrollbar-width: none;
+}
+.gallery-track::-webkit-scrollbar{ display: none; }
+.gallery-track.is-dragging{
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+.gallery-track:focus-visible{
+  outline: 2px solid var(--clay);
+  outline-offset: -2px;
+  border-radius: var(--r-md);
+}
+
+/* 每張照片保留自己的長寬比（不裁切、不變形），只把高度統一 */
+.gallery-item{
+  flex: 0 0 auto;
+  margin: 0;
+  height: clamp(290px, 60vw, 520px);
+  min-width: clamp(170px, 44vw, 300px);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  scroll-snap-align: center;
+  background: var(--ivory-2);
+  border: 1px solid var(--line-2);
+  box-shadow: var(--shadow-card);
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.gallery-item img{
+  height: 100%;
+  width: auto;
+  max-width: none;
+  object-fit: cover;
+  display: block;
+}
+.gallery-item:hover,
+.gallery-item:focus-within{
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* 左右箭頭；小螢幕直接滑動即可，故只在桌機顯示 */
+.gallery-nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  display: none;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+  z-index: 3;
+  color: var(--clay);
+  background: rgba(255,255,255,.82);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-soft);
+  transition: background .4s var(--ease), transform .4s var(--ease), opacity .4s var(--ease);
+}
+.gallery-nav:hover{ background: #fff; transform: translateY(-50%) scale(1.06); }
+.gallery-nav[disabled]{ opacity: 0; pointer-events: none; }
+.gallery-nav.prev{ left: clamp(.4rem, 1.6vw, 1.4rem); }
+.gallery-nav.next{ right: clamp(.4rem, 1.6vw, 1.4rem); }
+@media (min-width: 900px){ .gallery-nav{ display: grid; } }
+
+.gallery-hint{
+  margin-top: clamp(.9rem, 3.4vw, 1.3rem);
+  text-align: center;
+  font-size: clamp(.72rem, 2.85vw, .82rem);
+  letter-spacing: .22em;
+  color: var(--ink-3);
 }
 
 .btn-solid{
@@ -1253,10 +1331,6 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   .vcard{ padding-left: 1rem; }
 }
 
-@media (max-width: 768px){
-  .album-frame{ aspect-ratio: 3 / 4; }
-}
-
 @media (max-width: 360px){
   .nav{ padding-inline: .55rem; }
   .nav-links a{ font-size: .68rem; }
@@ -1393,25 +1467,28 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   <div class="wrap">
     <p class="kicker reveal">Our Album</p>
     <h2 class="sec-title reveal">婚紗相簿 <span class="sep">/</span> OUR ALBUM</h2>
-
-    <div class="album-frame reveal">
-      <iframe
-        src="https://simplebooklet.com/untitled6265"
-        title="婚紗相簿"
-        loading="lazy"
-        allowfullscreen
-        referrerpolicy="no-referrer-when-downgrade"
-        style="width:100%;height:100%;border:0;display:block;background:#fff;"></iframe>
-    </div>
-
-    <p class="album-note reveal">若相簿未正常顯示，請點下方按鈕開啟。</p>
-
-    <div class="album-btn-row reveal">
-      <a class="btn-solid" href="https://simplebooklet.com/untitled6265" target="_blank" rel="noopener">
-        在新視窗開啟相簿 · OPEN IN NEW TAB
-      </a>
-    </div>
   </div>
+
+  <div class="gallery reveal">
+    <button class="gallery-nav prev" type="button" aria-label="上一張">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><polyline points="14.5 5 7.5 12 14.5 19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <div class="gallery-track" id="gallery-track" tabindex="0" role="region" aria-label="婚紗相簿，可左右捲動瀏覽">
+      <figure class="gallery-item"><img src="https://i.postimg.cc/PfyZnRkb/IMG-7368.jpg" alt="婚紗照 1" loading="lazy" draggable="false" /></figure>
+      <figure class="gallery-item"><img src="https://i.postimg.cc/y6j9Cbzn/IMG-7377.jpg" alt="婚紗照 2" loading="lazy" draggable="false" /></figure>
+      <figure class="gallery-item"><img src="https://i.postimg.cc/ZYH3zMhX/IMG-7384.jpg" alt="婚紗照 3" loading="lazy" draggable="false" /></figure>
+      <figure class="gallery-item"><img src="https://i.postimg.cc/RC7d6dxs/IMG-7385.jpg" alt="婚紗照 4" loading="lazy" draggable="false" /></figure>
+      <figure class="gallery-item"><img src="https://i.postimg.cc/9QRqTXqc/IMG-7397.jpg" alt="婚紗照 5" loading="lazy" draggable="false" /></figure>
+      <figure class="gallery-item"><img src="https://i.postimg.cc/kGJbtxWz/IMG-7407.jpg" alt="婚紗照 6" loading="lazy" draggable="false" /></figure>
+    </div>
+
+    <button class="gallery-nav next" type="button" aria-label="下一張">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><polyline points="9.5 5 16.5 12 9.5 19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <p class="gallery-hint reveal">← 左右滑動瀏覽 6 張婚紗照 →</p>
 </section>
 
 <!-- ============================ DETAILS ============================ -->
@@ -1665,6 +1742,13 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
 </footer>
 
 <script>
+/* 保險機制：任何腳本發生錯誤時，一律讓 .reveal 內容顯示，
+   避免整頁中間區塊因 opacity:0 而整片空白。 */
+window.addEventListener("error", function () {
+  var els = document.querySelectorAll(".reveal");
+  Array.prototype.forEach.call(els, function (el) { el.classList.add("is-in"); });
+});
+
 (function () {
   "use strict";
 
@@ -1876,8 +1960,9 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
       void alertBox.offsetWidth;           /* 重新觸發動畫 */
       alertBox.classList.add("is-shake");
     }
-    try { alertBox.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {
-      alertBox.scrollIntoView();
+    if (typeof alertBox.scrollIntoView === "function") {
+      try { alertBox.scrollIntoView({ behavior: "smooth", block: "center" }); }
+      catch (e) { /* 平滑捲動不被支援時忽略即可，不影響警示顯示 */ }
     }
   }
 
@@ -1925,9 +2010,8 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
       showAlert();
       if (msg) { msg.textContent = ""; }
       if (firstBad) {
-        try { firstBad.focus({ preventScroll: true }); } catch (e) {
-          try { firstBad.focus(); } catch (e2) {}
-        }
+        try { firstBad.focus({ preventScroll: true }); }
+        catch (e) { try { firstBad.focus(); } catch (e2) {} }
       }
       return false;
     }
@@ -2017,7 +2101,88 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
     });
   }
 })();
+
+/* ---------------- 婚紗相簿：水平捲動 ---------------- */
+(function () {
+  var track = document.getElementById("gallery-track");
+  if (!track) { return; }
+
+  var wrap  = track.closest(".gallery");
+  var prev  = wrap ? wrap.querySelector(".gallery-nav.prev") : null;
+  var next  = wrap ? wrap.querySelector(".gallery-nav.next") : null;
+  var items = track.querySelectorAll(".gallery-item");
+
+  /* 一次捲動的距離 = 相鄰兩張照片的實際間距（不寫死像素） */
+  function step() {
+    if (items.length < 2) { return track.clientWidth; }
+    return items[1].offsetLeft - items[0].offsetLeft;
+  }
+  function go(dir) { track.scrollBy({ left: dir * step(), behavior: "smooth" }); }
+
+  /* 捲到兩端時淡出對應的箭頭 */
+  function sync() {
+    var max = track.scrollWidth - track.clientWidth - 1;
+    if (prev) { prev.disabled = track.scrollLeft <= 0; }
+    if (next) { next.disabled = track.scrollLeft >= max; }
+  }
+
+  if (prev) { prev.addEventListener("click", function () { go(-1); }); }
+  if (next) { next.addEventListener("click", function () { go(1); }); }
+
+  track.addEventListener("scroll", sync, { passive: true });
+  window.addEventListener("resize", sync);
+  sync();
+
+  /* 鍵盤：左右鍵切換、Home / End 到頭尾 */
+  track.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+    else if (e.key === "Home") { e.preventDefault(); track.scrollTo({ left: 0, behavior: "smooth" }); }
+    else if (e.key === "End") { e.preventDefault(); track.scrollTo({ left: track.scrollWidth, behavior: "smooth" }); }
+  });
+
+  /* 桌機滑鼠拖曳（觸控裝置本身就能滑） */
+  var dragging = false, startX = 0, startScroll = 0, moved = 0;
+
+  track.addEventListener("mousedown", function (e) {
+    if (e.button !== 0) { return; }
+    dragging = true;
+    moved = 0;
+    startX = e.pageX;
+    startScroll = track.scrollLeft;
+    track.classList.add("is-dragging");
+  });
+
+  window.addEventListener("mousemove", function (e) {
+    if (!dragging) { return; }
+    var dx = e.pageX - startX;
+    moved = Math.abs(dx);
+    track.scrollLeft = startScroll - dx;
+  });
+
+  window.addEventListener("mouseup", function () {
+    if (!dragging) { return; }
+    dragging = false;
+    track.classList.remove("is-dragging");
+    sync();
+  });
+
+  /* 拖曳後放開的那一下不要觸發點擊 */
+  track.addEventListener("click", function (e) {
+    if (moved > 6) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+
+  /* 圖片載入失敗時給暖色底，避免版面留白 */
+  Array.prototype.forEach.call(items, function (fig) {
+    var img = fig.querySelector("img");
+    if (!img) { return; }
+    img.addEventListener("error", function () {
+      fig.style.background = "linear-gradient(150deg, var(--ivory-2), var(--ivory-3))";
+    });
+  });
+})();
 </script>
+
 
 <!--
 ============================================================
@@ -2032,11 +2197,12 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
      Bride：搜尋 alt="新娘 Bride" 上方那行 img src
      替換 src 即可，圖片會自動以 object-fit:cover 裁成圓形。
 
-  3) 相簿網址
-     搜尋 simplebooklet.com/untitled6265，共有兩處：
-       (a) <iframe src="..."> 的網址
-       (b) 「在新視窗開啟相簿」按鈕的 <a href="...">
-     兩處請一起替換。
+  3) 婚紗相簿（6 張，水平捲動）
+     在 HTML 搜尋 gallery-track，替換其中 6 個 <figure class="gallery-item"> 的 img src。
+     每張照片保留自己的長寬比（不裁切、不變形），只把高度統一為
+     clamp(290px, 60vw, 520px)，所以直式、橫式照片都能直接放。
+     要增減張數：複製或刪除整個 <figure class="gallery-item"> 即可，
+     箭頭、捲動與張數會自動跟著調整，不需改 JS。
 
   4) 倒數目標時間
      搜尋 new Date(2026, 11, 12, 11, 30, 0)
@@ -2084,13 +2250,6 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
 
 </body>
 </html>
-
-
-
-
-
-
-
 
 
 
