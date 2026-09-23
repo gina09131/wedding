@@ -529,6 +529,52 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   color: var(--ink-2);
 }
 
+/* Groom／Bride 與其下方的「主婚人」成組，置中排列 */
+.couple-meta{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .45rem;
+}
+
+.officiant{
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-zh);
+  font-size: clamp(.72rem, 2.9vw, .84rem);
+  line-height: 1.85;
+  letter-spacing: .08em;
+}
+
+/* 新人姓名（Groom／Bride 標籤下方） */
+.person-name{
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-zh);
+  font-weight: 500;
+  font-size: clamp(.92rem, 3.7vw, 1.08rem);
+  letter-spacing: .14em;
+  color: var(--ink);
+}
+
+/* 主婚人角色：字體、顏色、字距皆比照 Groom／Bride 標籤 */
+.officiant-role{
+  display: block;
+  font-family: var(--font-zh);
+  font-weight: 500;
+  font-size: clamp(.72rem, 3vw, .88rem);
+  letter-spacing: .3em;
+  text-indent: .3em;
+  color: var(--clay);
+}
+
+.officiant-names{
+  display: block;
+  margin-top: .1em;
+  color: var(--ink-2);
+  white-space: nowrap;   /* 兩個名字不拆行 */
+}
+
 .story{
   max-width: 600px;
   margin-inline: auto;
@@ -877,6 +923,30 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
 }
 
 .acc-step:last-child{ margin-bottom: 0; }
+
+/* Accordion 內的附註文字與附圖（停車資訊） */
+.acc-note{
+  margin: 0;
+  font-size: clamp(.85rem, 3.4vw, .98rem);
+  line-height: 2.05;
+  letter-spacing: .03em;
+  color: var(--ink-2);
+}
+
+.acc-photo{
+  margin: .9rem 0 0;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  background: var(--ivory-2);
+  box-shadow: var(--shadow-soft);
+}
+
+.acc-photo img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
 
 .acc-step::before{
   content: "";
@@ -1364,7 +1434,7 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
   <a class="nav-brand" href="#top">Roy &amp; Gina</a>
   <ul class="nav-links">
     <li><a href="#about">關於我們</a></li>
-    <li><a href="#album">婚紗相簿</a></li>
+    <li><a href="#album">婚紗照</a></li>
     <li><a href="#details">婚禮詳情</a></li>
     <li><a href="#rsvp">填寫回函</a></li>
   </ul>
@@ -1447,7 +1517,14 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
             src="https://cdn-chatly-docs.vyro.ai/chatly/ultra-agent/uploads/9f06a61f-11ba-4934-ad06-d5062be13350/3de3ce36-a99f-438e-9ce8-465e6bdebaa3.JPG"
             alt="新郎 Groom" loading="lazy" />
         </span>
-        <span class="couple-label">Groom</span>
+        <div class="couple-meta">
+          <span class="couple-label">Groom <span class="tc">新郎</span></span>
+          <p class="person-name">吳奇翰</p>
+          <p class="officiant">
+            <span class="officiant-role">男方主婚人</span>
+            <span class="officiant-names">吳雨宸/王芊嬑</span>
+          </p>
+        </div>
       </div>
 
       <div class="couple-item">
@@ -1456,7 +1533,14 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
             src="https://cdn-chatly-docs.vyro.ai/chatly/ultra-agent/uploads/9f06a61f-11ba-4934-ad06-d5062be13350/165953f9-9a64-419f-9ea3-af22aeb85d86.JPG"
             alt="新娘 Bride" loading="lazy" />
         </span>
-        <span class="couple-label">Bride</span>
+        <div class="couple-meta">
+          <span class="couple-label">Bride <span class="tc">新娘</span></span>
+          <p class="person-name">吳琪嘉</p>
+          <p class="officiant">
+            <span class="officiant-role">女方主婚人</span>
+            <span class="officiant-names">吳豐成/王淑芳</span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -1465,8 +1549,8 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
 <!-- ============================ ALBUM ============================ -->
 <section id="album" class="section">
   <div class="wrap">
-    <p class="kicker reveal">Our Album</p>
-    <h2 class="sec-title reveal">婚紗相簿 <span class="sep">/</span> OUR ALBUM</h2>
+    <p class="kicker reveal">Our Photo</p>
+    <h2 class="sec-title reveal">婚紗照 <span class="sep">/</span> Our photo</h2>
   </div>
 
   <div class="gallery reveal">
@@ -1474,7 +1558,7 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><polyline points="14.5 5 7.5 12 14.5 19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
 
-    <div class="gallery-track" id="gallery-track" tabindex="0" role="region" aria-label="婚紗相簿，可左右捲動瀏覽">
+    <div class="gallery-track" id="gallery-track" tabindex="0" role="region" aria-label="婚紗照，可左右捲動瀏覽">
       <figure class="gallery-item"><img src="https://i.postimg.cc/PfyZnRkb/IMG-7368.jpg" alt="婚紗照 1" loading="lazy" draggable="false" /></figure>
       <figure class="gallery-item"><img src="https://i.postimg.cc/y6j9Cbzn/IMG-7377.jpg" alt="婚紗照 2" loading="lazy" draggable="false" /></figure>
       <figure class="gallery-item"><img src="https://i.postimg.cc/ZYH3zMhX/IMG-7384.jpg" alt="婚紗照 3" loading="lazy" draggable="false" /></figure>
@@ -1527,6 +1611,25 @@ section{ scroll-margin-top: calc(var(--nav-h) + 22px); position: relative; }
     </div>
 
     <div class="acc reveal">
+      <div class="acc-item">
+        <h3 class="acc-head">
+          <button class="acc-trigger" type="button" id="acc-btn-parking"
+                  aria-expanded="false" aria-controls="acc-panel-parking">
+            <span class="acc-title">停車資訊</span>
+            <span class="acc-icon" aria-hidden="true"></span>
+          </button>
+        </h3>
+        <div class="acc-panel" id="acc-panel-parking" role="region" aria-labelledby="acc-btn-parking">
+          <div class="acc-panel-inner">
+            <p class="acc-note">地下停車位數量有限，敬請提早入內停放。</p>
+            <figure class="acc-photo">
+              <img src="https://i.postimg.cc/jSN5NshR/49977.jpg"
+                   alt="停車資訊" loading="lazy" draggable="false" />
+            </figure>
+          </div>
+        </div>
+      </div>
+
       <div class="acc-item">
         <h3 class="acc-head">
           <button class="acc-trigger" type="button" id="acc-btn-1"
@@ -1878,6 +1981,16 @@ window.addEventListener("error", function () {
       }
     });
 
+    /* 附圖載入後面板會變高：展開中者重新量測，避免圖片被裁切 */
+    var pic = panel.querySelector("img");
+    if (pic) {
+      pic.addEventListener("load", function () {
+        if (btn.getAttribute("aria-expanded") === "true") {
+          panel.style.maxHeight = "none";
+        }
+      });
+    }
+
     panel.addEventListener("transitionend", function (event) {
       if (event.propertyName !== "max-height") { return; }
       if (btn.getAttribute("aria-expanded") === "true") {
@@ -2102,7 +2215,7 @@ window.addEventListener("error", function () {
   }
 })();
 
-/* ---------------- 婚紗相簿：水平捲動 ---------------- */
+/* ---------------- 婚紗照：水平捲動 ---------------- */
 (function () {
   var track = document.getElementById("gallery-track");
   if (!track) { return; }
@@ -2197,7 +2310,7 @@ window.addEventListener("error", function () {
      Bride：搜尋 alt="新娘 Bride" 上方那行 img src
      替換 src 即可，圖片會自動以 object-fit:cover 裁成圓形。
 
-  3) 婚紗相簿（6 張，水平捲動）
+  3) 婚紗照（6 張，水平捲動）
      在 HTML 搜尋 gallery-track，替換其中 6 個 <figure class="gallery-item"> 的 img src。
      每張照片保留自己的長寬比（不裁切、不變形），只把高度統一為
      clamp(290px, 60vw, 520px)，所以直式、橫式照片都能直接放。
@@ -2250,6 +2363,11 @@ window.addEventListener("error", function () {
 
 </body>
 </html>
+
+
+
+
+
 
 
 
